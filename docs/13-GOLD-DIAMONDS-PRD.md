@@ -6,106 +6,94 @@ This document is a working PRD (Product Requirements Document) for the 13 Gold D
 
 These features are required to launch the first working version.
 
-### 1\. Member Access & Accounts
+### Phase 1 Tracker
 
-- Member registration
-- Login
-- Password reset
-- Email verification
-- Access to member-only areas
-
-### 2\. New Member Onboarding
-
-- Welcome message
-- Social media pages to follow
-- WhatsApp group links
-- Telegram group links
-
-### 3\. Product Information Pages (Basic)
-
-- What the product is
-- How to take
-- Dosage
-- Benefits
-
-### 4\. Basic Navigation
-
-- Welcome
-- Social Channels
-- Products
-- Testimonials
+| Phase | Area | Requirement | Status | Notes |
+|---|---|---|---|---|
+| 1 (Starter) | Member Access & Accounts | Member registration | Not started |  |
+| 1 (Starter) | Member Access & Accounts | Login (Google sign-in) | Not started |  |
+| 1 (Starter) | Member Access & Accounts | Password reset (not required for Google-only login) | N/A | Google-only |
+| 1 (Starter) | Member Access & Accounts | Email verification (not required for Google-only login) | N/A | Google-only |
+| 1 (Starter) | Member Access & Accounts | Access to member-only areas | Not started |  |
+| 1 (Starter) | New Member Onboarding | Welcome message | Not started |  |
+| 1 (Starter) | New Member Onboarding | Social media pages to follow | Not started |  |
+| 1 (Starter) | New Member Onboarding | WhatsApp group links | Not started |  |
+| 1 (Starter) | New Member Onboarding | Telegram group links | Not started |  |
+| 1 (Starter) | Product Information (Basic) | What the product is | Not started |  |
+| 1 (Starter) | Product Information (Basic) | How to take | Not started |  |
+| 1 (Starter) | Product Information (Basic) | Dosage | Not started |  |
+| 1 (Starter) | Product Information (Basic) | Benefits | Not started |  |
+| 1 (Starter) | Basic Navigation | Welcome | Not started |  |
+| 1 (Starter) | Basic Navigation | Social Channels | Not started |  |
+| 1 (Starter) | Basic Navigation | Products | Not started |  |
+| 1 (Starter) | Basic Navigation | Testimonials | Not started |  |
 
 ## Phase 2 - Essential (Core Value Features)
 
 These features provide the full business value and complete the core offering.
 
-### 5\. Testimonials
+### Phase 2 Tracker
 
-- Organised by product taken
-- Organised by health issue resolved
-- Filter by tag
-- Admin approval flow
+| Phase | Area | Requirement | Status | Notes |
+|---|---|---|---|---|
+| 2 (Essential) | Testimonials | Organised by product taken | Not started |  |
+| 2 (Essential) | Testimonials | Organised by health issue resolved | Not started |  |
+| 2 (Essential) | Testimonials | Filter by tag | Not started |  |
+| 2 (Essential) | Testimonials | Admin approval flow | Not started | Stored/managed via Google Sheets |
+| 2 (Essential) | Business Training | How to do the business | Not started |  |
+| 2 (Essential) | Business Training | Group lunch treat method | Not started |  |
+| 2 (Essential) | Business Training | Income method: 3×7 | Not started |  |
+| 2 (Essential) | Business Training | Income method: 111 coffee method | Not started |  |
+| 2 (Essential) | Business Training | Income method: 1 simple method | Not started |  |
+| 2 (Essential) | Financial Goal Guidance | How to reach income targets (e.g., \$60k/month) | Not started |  |
+| 2 (Essential) | Financial Goal Guidance | Breakdown of systems | Not started |  |
+| 2 (Essential) | Financial Goal Guidance | Step-by-step training | Not started |  |
+| 2 (Essential) | Mindset Training | This is a business and should be run like one | Not started |  |
+| 2 (Essential) | Mindset Training | This is not a hobby | Not started |  |
+| 2 (Essential) | Mindset Training | 3-year graph to chart success | Not started |  |
+| 2 (Essential) | Mindset Training | Drinking the coffee = becoming a CEO | Not started |  |
+| 2 (Essential) | Content Library | Podcasts | Not started | Likely link/embed |
+| 2 (Essential) | Content Library | Blogs | Not started | Likely link/embed |
+| 2 (Essential) | Content Library | Training videos | Not started | Likely link/embed (YouTube) |
+| 2 (Essential) | Content Library | Screenshots & step-by-step guides | Not started |  |
+| 2 (Essential) | Content Library | SH website navigation guide | Not started |  |
+| 2 (Essential) | Admin Functions (Core) | Upload/edit content | Not started |  |
+| 2 (Essential) | Admin Functions (Core) | Upload images/videos | Not started | Prefer links/embeds to reduce bandwidth |
+| 2 (Essential) | Admin Functions (Core) | Manage product information | Not started |  |
+| 2 (Essential) | Admin Functions (Core) | Approve testimonials | Not started | Stored/managed via Google Sheets |
+| 2 (Essential) | Admin Functions (Core) | Manage users | Not started | In-app Admin Dashboard |
 
-### 6\. Business Training
+#### Admin Dashboard (User Management) — Requirements (Recommended)
 
-- How to do the business
-- Group lunch treat method
-- Income methods:
-  - 3×7
-  - 111 coffee method
-  - 1 simple method
+To avoid relying on Firebase Console day-to-day, provide an in-app Admin Dashboard focused on **user access control**.
 
-### 7\. Financial Goal Guidance
-
-- How to reach income targets (e.g., \$60k/month)
-- Breakdown of systems
-- Step-by-step training
-
-### 8\. Mindset Training (13 Gold Diamond Mindset)
-
-- This is a business and should be run like one
-- This is not a hobby
-- 3-year graph to chart success
-- Drinking the coffee = becoming a CEO
-
-### 9\. Content Library
-
-- Podcasts
-- Blogs
-- Training videos
-- Screenshots & step-by-step guides
-- SH website navigation guide
-
-### 10\. Admin Functions (Core)
-
-- Upload/edit content
-- Upload images/videos
-- Manage product information
-- Approve testimonials
-- Manage users
+- **View users**: list members (email, display name, created date, last sign-in if available)
+- **Access control (default allow)**:
+  - By default, any signed-in Google account can access member areas
+  - Admins can blacklist/block users when needed
+- **Blacklist/Blocking**:
+  - Block a user from accessing the app (soft block)
+  - Disable a Firebase Auth user (hard block: cannot sign in)
+- **Roles**:
+  - Assign role (e.g., `member`, `admin`)
+  - Admin-only access to approval workflows and content management
+- **Audit trail (optional but recommended)**: log admin actions (who changed what, when)
 
 ## Phase 3 - Nice to Haves (Enhancements & Upgrades)
 
 These improve user experience but are not required for initial or core operation.
 
-### 11\. Advanced Search Function
+### Phase 3 Tracker
 
-- Search across products, testimonials, guides, mindset materials, LOA, podcasts/blogs
-
-### 12\. Law of Attraction Tools
-
-- LOA techniques to accelerate results
-
-### 13\. Optional Product Enhancements
-
-- Price list
-- Image/video gallery
-
-### 14\. Admin Enhancements
-
-- Edit translations (if any in future)
-- Additional content categories
-- Analytics dashboards
+| Phase | Area | Requirement | Status | Notes |
+|---|---|---|---|---|
+| 3 (Nice to have) | Advanced Search | Search across products, testimonials, guides, mindset materials, LOA, podcasts/blogs | Not started |  |
+| 3 (Nice to have) | Law of Attraction Tools | LOA techniques to accelerate results | Not started |  |
+| 3 (Nice to have) | Product Enhancements | Price list | Not started |  |
+| 3 (Nice to have) | Product Enhancements | Image/video gallery | Not started |  |
+| 3 (Nice to have) | Admin Enhancements | Edit translations (if any in future) | Not started |  |
+| 3 (Nice to have) | Admin Enhancements | Additional content categories | Not started |  |
+| 3 (Nice to have) | Admin Enhancements | Analytics dashboards | Not started |  |
 
 This new structure categorises the entire PRD into Starter → Essential → Nice to Have phases for clearer planning and prioritisation.
 
@@ -197,3 +185,66 @@ A wellness‑focused brand should feel calming, trustworthy, clean, and upliftin
 - Avoid harsh reds or pure black
 
 If you want, I can generate a full UI style guide or sample screens next.
+
+## Proposed Tech Stack (Draft)
+
+This section captures a practical, low-ops implementation approach aligned with this PRD.
+
+### Goals / Constraints
+
+- Mobile responsive (mobile-first)
+- Prefer Vercel deployment
+- Avoid Next.js
+- Use Google login (no email/password handling)
+- Support future “real database” needs (users, approvals, content, search)
+
+### Recommended Stack (most seamless on Vercel without Next.js)
+
+- **Frontend**: React + Vite (SPA) + React Router
+- **Styling/UI**: Tailwind CSS (mobile-first) + **shadcn/ui** (Radix UI primitives)
+- **Auth**: Firebase Authentication (Google provider only)
+- **Content data source**: Google Sheets (source of truth)
+  - Store: testimonials, tags, approvals/status, content library entries, user access controls (blacklist/roles)
+- **Cache**: Vercel KV (recommended) or in-memory cache in Serverless Functions (basic)
+  - Refresh cadence: weekly scheduled refresh + on-demand “Refresh now” from Admin Dashboard
+  - Environment separation (Hobby-friendly): use a single KV instance with key prefixes like `prod:*`, `staging:*`, `dev:*`
+    - Control active namespace via env var (e.g., `KV_NAMESPACE=prod|staging|dev`) per Vercel environment (Production/Preview) and locally
+- **File/Media**: Firebase Storage (only if hosting images/videos yourself; otherwise embed/link externally)
+- **Hosting**: Vercel (static build output + optional Serverless Functions)
+
+### User Control (Blacklisting & Roles)
+
+- **Default allow**: any signed-in Google account is granted access by default.
+- **Blacklist**:
+  - Soft block: keep a denylist (blocked emails and/or Firebase UID) in Google Sheets, cached in the app, and enforce checks on protected pages/routes.
+  - Hard block: disable a user in Firebase Auth (Admin SDK) to prevent sign-in.
+- **Roles**: store `role` (e.g., `member`, `admin`) in Google Sheets and/or mirror into Firebase custom claims for fast authorization checks.
+
+### Admin Dashboard Implementation Notes (Firebase + Vercel, without Next.js)
+
+- **Important security rule**: anything that changes users (disable users, set roles, set custom claims) must run on a **trusted server**.
+  - Do **not** call Firebase Admin actions from the browser.
+- **Recommended approach**:
+  - **Frontend (React/Vite)**: Admin pages (e.g., `/admin/users`) call server endpoints.
+  - **Backend**: Vercel **Serverless Functions** that use the **Firebase Admin SDK** (service account credentials via environment variables).
+  - **Authorization**: only allow calls if the requester is an admin (verified via Firebase ID token + admin claim/role).
+- **Data model suggestion**:
+  - Google Sheets as source of truth (blacklist/roles/testimonials/content)
+  - Cache the parsed Sheets data (weekly + manual refresh) to avoid rate limits and keep the site fast.
+  - Mirror critical permissions into Firebase **custom claims** (`role`, `blocked`) for fast checks in API + Security Rules (optional but recommended).
+
+### Content Storage Approach (recommended split)
+
+- **Mostly static content** (products, training pages, mindset copy): Markdown/config files in the repo (simple, fast, cheap).
+- **Dynamic/admin-managed content** (testimonials + approvals, tags, content library rows): Google Sheets.
+- **Caching strategy**: sync Google Sheets into cache weekly, and also provide an admin “sync now” action for urgent updates.
+
+### Google Sheets Data & Backup Notes
+
+- **Testimonials moderation in Sheets**: include columns for `status` (e.g., `pending/approved/rejected`), and recommended audit columns like `approved_by`, `approved_at`, `last_edited_by`, `last_edited_at`.
+- **Backup strategy**: rely on Google Sheets version history and periodic cloning/copying of the spreadsheet as an operational backup.
+
+### Bandwidth Note (to avoid surprises)
+
+- Linking to or embedding YouTube typically streams from YouTube (not your Vercel bandwidth).
+- Bandwidth risk usually comes from hosting large images/videos yourself or proxying external media through your app.
