@@ -4,6 +4,8 @@ This file contains the same content as `.env.example` but with a `.md` extension
 
 Copy the contents below to create your `.env.local` file.
 
+**Note:** After setting up, copy this to `.env.example` to keep it in sync.
+
 ```bash
 # Rename this file to `.env.local` for local development.
 #
