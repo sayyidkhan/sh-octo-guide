@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 export function Home() {
   const { user } = useAuth();
@@ -57,14 +58,14 @@ export function Home() {
 
 function QuickLinkCard({ title, description, icon, to }: { title: string; description: string; icon: string; to: string }) {
   return (
-    <a
-      href={to}
+    <Link
+      to={to}
       className="bg-white rounded-wellness p-6 shadow-sm hover:shadow-md transition-shadow border border-transparent hover:border-primary/20"
     >
       <div className="text-4xl mb-3">{icon}</div>
       <h3 className="text-xl font-heading font-semibold text-dark-text mb-2">{title}</h3>
       <p className="text-sm text-dark-text/70">{description}</p>
-    </a>
+    </Link>
   );
 }
 
