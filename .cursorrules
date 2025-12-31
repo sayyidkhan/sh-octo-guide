@@ -1,0 +1,27 @@
+# Project Rules for 13 Gold Diamonds Member Portal
+
+## Tech Stack
+- Frontend: React + Vite (SPA) + React Router
+- Styling: Tailwind CSS (mobile-first) + shadcn/ui
+- Auth: Firebase Authentication (Google provider only)
+- Content: Google Sheets (source of truth) → serverless API → CDN cache
+- Hosting: Vercel
+
+## Code Style
+- Mobile-first responsive design
+- Use shadcn/ui components where possible
+- Server-side auth checks for protected content (don't rely on client-side only)
+
+## Caching Strategy
+- Use CDN cache headers (s-maxage + stale-while-revalidate) for shared content
+- Fetch Google Sheets server-side only (never expose credentials to browser)
+- For member-only content, verify Firebase ID token before returning data
+
+## Security
+- Never expose Firebase Admin SDK or Google Sheets credentials to the browser
+- All admin actions (user management, etc.) must run in Vercel Serverless Functions
+- Verify admin role via Firebase ID token + custom claims/roles before allowing admin endpoints
+
+## Environment Variables
+- Reference `.env.example` for all required environment variables and setup instructions
+- `.env.example` contains Firebase, Google Sheets, and CDN cache configuration templates

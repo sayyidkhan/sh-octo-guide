@@ -205,10 +205,11 @@ This section captures a practical, low-ops implementation approach aligned with 
 - **Auth**: Firebase Authentication (Google provider only)
 - **Content data source**: Google Sheets (source of truth)
   - Store: testimonials, tags, approvals/status, content library entries, user access controls (blacklist/roles)
-- **Cache**: Vercel KV (recommended) or in-memory cache in Serverless Functions (basic)
-  - Refresh cadence: weekly scheduled refresh + on-demand “Refresh now” from Admin Dashboard
-  - Environment separation (Hobby-friendly): use a single KV instance with key prefixes like `prod:*`, `staging:*`, `dev:*`
-    - Control active namespace via env var (e.g., `KV_NAMESPACE=prod|staging|dev`) per Vercel environment (Production/Preview) and locally
+- **Caching strategy (CDN-first)**:
+  - Fetch Google Sheets via a serverless API endpoint and return data with CDN cache headers (long TTL + `stale-while-revalidate`)
+  - Notes:
+    - Great for shared, same-for-all content
+    - For truly private/member-only content, avoid publicly cacheable endpoints unless access is enforced server-side
 - **File/Media**: Firebase Storage (only if hosting images/videos yourself; otherwise embed/link externally)
 - **Hosting**: Vercel (static build output + optional Serverless Functions)
 
