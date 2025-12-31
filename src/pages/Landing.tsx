@@ -8,9 +8,9 @@ export function Landing() {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
-  // Redirect to dashboard if already signed in
+  // Redirect to dashboard only if user can actually access member area
   useEffect(() => {
-    if (user && !loading) {
+    if (user && !loading && (user.approved || user.isSuperAdmin)) {
       navigate('/dashboard');
     }
   }, [user, loading, navigate]);
@@ -46,7 +46,23 @@ export function Landing() {
           
           <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => {
+                // If already signed in, route them to the right place instead of bouncing
+                if (user && !loading) {
+                  if (user.blocked) {
+                    navigate('/blocked');
+                    return;
+                  }
+                  if (!user.approved && !user.isSuperAdmin) {
+                    navigate('/pending-approval');
+                    return;
+                  }
+                  navigate('/dashboard');
+                  return;
+                }
+
+                navigate('/login');
+              }}
               className="bg-white text-[#5db598] hover:bg-gray-50 font-bold py-4 px-10 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg min-w-[200px] cursor-pointer"
             >
               Member Login

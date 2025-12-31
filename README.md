@@ -77,11 +77,55 @@ Fill in your Firebase and Google Sheets credentials. See `ENV_TEMPLATE.md` for d
 
 ### 5. Development
 
+#### Option A: Frontend-only (Vite)
+
+This runs **only** the React SPA. Vercel Serverless Functions under `api/` will **not** run in this mode.
+
 ```bash
 npm run dev
 ```
 
 Visit `http://localhost:5173`
+
+#### Option B: Full-stack local dev (Vercel Functions + Vite) — recommended for Admin + Sheets
+
+Use this when you need `/api/*` endpoints locally (e.g. `/api/admin/users`, `/api/sheets`).
+
+1) Install the Vercel CLI (pick one):
+
+```bash
+npm install -g vercel
+```
+
+or:
+
+```bash
+npx vercel@latest --version
+```
+
+2) Make sure your env vars are available to Vercel locally
+
+Important: `vercel dev` reliably loads **`.env`** (not always `.env.local`).
+
+- If your `.env.local` already contains **both** client (`VITE_*`) and server (`FIREBASE_ADMIN_*`, `GOOGLE_SHEETS_*`) variables, you can do:
+
+```bash
+cp .env.local .env
+```
+
+- Otherwise, create/update `.env` and copy the needed values from `ENV_TEMPLATE.md`.
+
+3) Run Vercel dev:
+
+```bash
+vercel dev
+```
+
+Then open the URL printed by Vercel (commonly `http://localhost:3000`).
+
+Notes:
+- `npm run dev` (Vite) will show **mock Admin data** if the backend isn’t running.
+- `vercel dev` is required for real Admin actions (approve users, block/enable/delete, promote/demote) and for server-side Google Sheets fetching.
 
 ### 6. Build
 
@@ -164,9 +208,11 @@ Fetches content from Google Sheets with CDN caching.
 
 ## Access Control
 
-- **Default Allow**: Any Google account can sign in and access member areas
-- **Blacklist**: Admins can block users (soft block via Sheets, hard block via Firebase)
-- **Roles**: `member` (default) and `admin` stored in Firebase custom claims
+- **Sign-in**: Any Google account can sign in
+- **Approval Required**: Users cannot access member-only areas until an admin approves them
+- **Super Admin Bypass**: Emails listed in `VITE_ADMIN_EMAILS` are auto-approved and treated as admins
+- **Blocking**: Admins can block users (Firebase Auth `disabled` + optional custom claims)
+- **Roles**: `member` and `admin` stored in Firebase custom claims
 
 ## Theme & Design
 

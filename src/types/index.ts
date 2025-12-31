@@ -14,5 +14,6 @@ export interface AuthContextType {
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
 

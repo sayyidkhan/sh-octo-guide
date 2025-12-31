@@ -1,17 +1,64 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { auth } from '@/lib/firebase';
 
 export function PendingApproval() {
-  const { user, signOut } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
-  // If user becomes approved, redirect to home
+  // If user becomes approved, redirect to dashboard
   useEffect(() => {
     if (user?.approved) {
-      navigate('/home');
+      navigate('/dashboard');
     }
   }, [user, navigate]);
+
+  // If user signs out (or isn't logged in), return them to landing/login
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/');
+    }
+  }, [loading, user, navigate]);
+
+  // Auto-refresh ID token periodically so approval changes are picked up without a manual button.
+  useEffect(() => {
+    if (loading) return;
+    if (!user) return;
+    if (user.approved) return;
+
+    let cancelled = false;
+
+    const refresh = async () => {
+      try {
+        // Force refresh the ID token so updated custom claims (approved) are picked up
+        await auth.currentUser?.getIdToken(true);
+        // AuthContext listens to onIdTokenChanged and will update user.approved automatically.
+      } catch (e: any) {
+        if (!cancelled) {
+          // Keep it silent unless it's persistent; set a small message for visibility.
+          setError(e?.message || 'Unable to refresh login status. Please try again later.');
+        }
+      }
+    };
+
+    // Refresh immediately, then poll.
+    refresh();
+    const interval = window.setInterval(refresh, 8000);
+
+    // Also refresh when the tab becomes visible again.
+    const onVis = () => {
+      if (document.visibilityState === 'visible') refresh();
+    };
+    document.addEventListener('visibilitychange', onVis);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, [loading, user]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary via-[#65cba0] to-[#b3ce66] p-4">
@@ -44,16 +91,28 @@ export function PendingApproval() {
           <p className="text-xs text-dark-text/60">
             Please check back later or contact support if you have any questions.
           </p>
-          
+
+          {error && (
+            <div className="p-3 rounded-wellness border border-red-200 bg-red-50 text-red-700 text-sm">
+              {error}
+            </div>
+          )}
+
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => navigate('/')}
             className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-wellness transition-colors cursor-pointer"
           >
-            Check Approval Status
+            Back to Landing
           </button>
 
           <button
-            onClick={signOut}
+            onClick={async () => {
+              try {
+                await signOut();
+              } finally {
+                navigate('/');
+              }
+            }}
             className="w-full bg-white hover:bg-neutral-base text-dark-text font-medium py-3 px-6 rounded-wellness border border-neutral-base/50 transition-colors cursor-pointer"
           >
             Sign Out

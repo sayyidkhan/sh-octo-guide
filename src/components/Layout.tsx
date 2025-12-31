@@ -61,7 +61,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-4">
               {user && (
                 <div className="hidden md:flex items-center gap-3">
-                  <span className="text-sm text-dark-text">{user.displayName || user.email}</span>
+                  <Link
+                    to="/profile"
+                    className="text-sm text-dark-text hover:text-primary transition-colors cursor-pointer"
+                  >
+                    {user.displayName || user.email}
+                  </Link>
                   <button
                     onClick={handleSignOut}
                     className="text-sm text-dark-text hover:text-primary transition-colors cursor-pointer"
@@ -114,6 +119,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   <div className="px-3 py-2 text-sm text-dark-text/70">
                     {user.displayName || user.email}
                   </div>
+                  <NavLink
+                    to="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `block py-2 px-3 rounded-wellness text-sm font-medium transition-colors ${
+                        isActive ? 'bg-primary/10 text-primary' : 'text-dark-text hover:bg-neutral-base'
+                      }`
+                    }
+                  >
+                    Profile
+                  </NavLink>
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);

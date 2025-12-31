@@ -1,7 +1,13 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
-export function ProtectedRoute({ children }: { children: React.ReactNode }) {
+export function ProtectedRoute({
+  children,
+  requireApproval = true,
+}: {
+  children: React.ReactNode;
+  requireApproval?: boolean;
+}) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -25,7 +31,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   // Check if user is approved (super admins are always approved)
-  if (!user.approved && !user.isSuperAdmin) {
+  if (requireApproval && !user.approved && !user.isSuperAdmin) {
     return <Navigate to="/pending-approval" replace />;
   }
 

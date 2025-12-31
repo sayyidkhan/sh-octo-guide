@@ -6,11 +6,13 @@ import { Landing } from '@/pages/Landing';
 import { Login } from '@/pages/Login';
 import { Blocked } from '@/pages/Blocked';
 import { PendingApproval } from '@/pages/PendingApproval';
+import { Profile } from '@/pages/Profile';
 import { Home } from '@/pages/Home';
 import { SocialChannels } from '@/pages/SocialChannels';
 import { Products } from '@/pages/Products';
 import { Testimonials } from '@/pages/Testimonials';
 import { AdminDashboard } from '@/pages/Admin';
+import { Terms } from '@/pages/Terms';
 
 function App() {
   return (
@@ -22,6 +24,18 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/blocked" element={<Blocked />} />
           <Route path="/pending-approval" element={<PendingApproval />} />
+          <Route path="/terms" element={<Terms />} />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute requireApproval={false}>
+                <Layout>
+                  <Profile />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* Protected Routes - Member Dashboard */}
           <Route

@@ -8,7 +8,16 @@ export function Login() {
 
   useEffect(() => {
     if (user && !loading) {
-      navigate('/');
+      // If user is already signed in, route to the correct page
+      if (user.blocked) {
+        navigate('/blocked');
+        return;
+      }
+      if (!user.approved && !user.isSuperAdmin) {
+        navigate('/pending-approval');
+        return;
+      }
+      navigate('/dashboard');
     }
   }, [user, loading, navigate]);
 

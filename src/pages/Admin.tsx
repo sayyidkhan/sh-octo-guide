@@ -21,6 +21,7 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isMockData, setIsMockData] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [pageToken, setPageToken] = useState<string | undefined>();
   const [activeTab, setActiveTab] = useState<'pending' | 'all'>('pending');
@@ -32,7 +33,8 @@ export function AdminDashboard() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const pendingMembersCount = users.filter((u) => !u.approved).length;
-  const totalMembersCount = users.length;
+  const totalSignupsCount = users.length;
+  const totalMembersCount = Math.max(0, totalSignupsCount - pendingMembersCount);
   const totalAdminsCount = users.filter((u) => u.isAdmin).length;
 
   useEffect(() => {
@@ -210,6 +212,16 @@ export function AdminDashboard() {
     }
   };
 
+  const handleRefresh = async () => {
+    try {
+      setRefreshing(true);
+      // Re-fetch latest list; keeps current filters/search/tab intact.
+      await fetchUsers();
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   const handleUserAction = async (uid: string, action: 'disable' | 'enable' | 'delete' | 'setAdmin' | 'removeAdmin' | 'approve' | 'reject') => {
     if (action === 'delete' && !confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
       return;
@@ -282,7 +294,16 @@ export function AdminDashboard() {
         <div className="flex flex-wrap gap-3">
           {/* Pending Members Card */}
           <div className="bg-white px-6 py-4 rounded-wellness shadow-sm border border-neutral-base/50 min-w-[160px]">
-            <p className="text-sm text-dark-text/60 mb-1">Pending Members</p>
+            <p className="text-sm text-dark-text/60 mb-1 flex items-center gap-1">
+              <span>Pending Members</span>
+              <span
+                className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-neutral-base/70 text-[10px] text-dark-text/60 cursor-help"
+                title="Users who have signed up but are not approved yet. They cannot access member-only sections until approved."
+                aria-label="Pending Members info"
+              >
+                i
+              </span>
+            </p>
             <p className={`text-3xl font-bold ${pendingMembersCount === 0 ? 'text-dark-text/60' : 'text-orange-600'}`}>
               {pendingMembersCount}
             </p>
@@ -290,7 +311,16 @@ export function AdminDashboard() {
 
           {/* Total Admins Card */}
           <div className="bg-white px-6 py-4 rounded-wellness shadow-sm border border-neutral-base/50 min-w-[160px]">
-            <p className="text-sm text-dark-text/60 mb-1">Total Admins</p>
+            <p className="text-sm text-dark-text/60 mb-1 flex items-center gap-1">
+              <span>Total Admins</span>
+              <span
+                className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-neutral-base/70 text-[10px] text-dark-text/60 cursor-help"
+                title="Users with admin role (custom claim role=admin). Admins can manage members and approvals."
+                aria-label="Total Admins info"
+              >
+                i
+              </span>
+            </p>
             <p className="text-3xl font-bold text-accent">
               {totalAdminsCount}
             </p>
@@ -298,9 +328,35 @@ export function AdminDashboard() {
 
           {/* Total Members Card */}
           <div className="bg-white px-6 py-4 rounded-wellness shadow-sm border border-neutral-base/50 min-w-[160px]">
-            <p className="text-sm text-dark-text/60 mb-1">Total Members</p>
+            <p className="text-sm text-dark-text/60 mb-1 flex items-center gap-1">
+              <span>Total Members</span>
+              <span
+                className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-neutral-base/70 text-[10px] text-dark-text/60 cursor-help"
+                title="Approved users (Total Signups minus Pending Members). These users can access member-only sections."
+                aria-label="Total Members info"
+              >
+                i
+              </span>
+            </p>
             <p className="text-3xl font-bold text-primary">
               {totalMembersCount}
+            </p>
+          </div>
+
+          {/* Total Signups Card */}
+          <div className="bg-white px-6 py-4 rounded-wellness shadow-sm border border-neutral-base/50 min-w-[160px]">
+            <p className="text-sm text-dark-text/60 mb-1 flex items-center gap-1">
+              <span>Total Signups</span>
+              <span
+                className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-neutral-base/70 text-[10px] text-dark-text/60 cursor-help"
+                title="All users in Firebase Authentication (approved + pending)."
+                aria-label="Total Signups info"
+              >
+                i
+              </span>
+            </p>
+            <p className="text-3xl font-bold text-dark-text">
+              {totalSignupsCount}
             </p>
           </div>
         </div>
@@ -314,36 +370,62 @@ export function AdminDashboard() {
         </div>
       )}
 
+      <div className="p-4 rounded-wellness border border-primary/20 bg-primary/5 text-dark-text/80 text-sm">
+        <span className="font-medium">Note:</span> Admin role changes (promote/demote) may take up to <span className="font-medium">~5 minutes</span> to appear for the affected user.
+        Switching tabs or refocusing the browser can apply it sooner.
+      </div>
+
       {/* Tabs */}
       <div className="border-b border-neutral-base/50">
-        <div className="flex gap-1">
-          <button
-            onClick={() => setActiveTab('pending')}
-            className={`px-6 py-3 font-medium text-sm transition-colors cursor-pointer relative ${
-              activeTab === 'pending'
-                ? 'text-primary border-b-2 border-primary'
-                : 'text-dark-text/60 hover:text-dark-text'
-            }`}
-          >
-            Pending Approvals
-            {users.filter(u => !u.approved).length > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-accent rounded-full">
-                {users.filter(u => !u.approved).length}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex gap-1">
+            <button
+              onClick={() => setActiveTab('pending')}
+              className={`px-6 py-3 font-medium text-sm transition-colors cursor-pointer relative ${
+                activeTab === 'pending'
+                  ? 'text-primary border-b-2 border-primary'
+                  : 'text-dark-text/60 hover:text-dark-text'
+              }`}
+            >
+              Pending Approvals
+              {users.filter(u => !u.approved).length > 0 && (
+                <span className="ml-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-accent rounded-full">
+                  {users.filter(u => !u.approved).length}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab('all')}
+              className={`px-6 py-3 font-medium text-sm transition-colors cursor-pointer relative ${
+                activeTab === 'all'
+                  ? 'text-primary border-b-2 border-primary'
+                  : 'text-dark-text/60 hover:text-dark-text'
+              }`}
+            >
+              All Members
+              <span className="ml-2 text-xs text-dark-text/50">
+                ({users.length})
               </span>
-            )}
-          </button>
+            </button>
+          </div>
+
           <button
-            onClick={() => setActiveTab('all')}
-            className={`px-6 py-3 font-medium text-sm transition-colors cursor-pointer relative ${
-              activeTab === 'all'
-                ? 'text-primary border-b-2 border-primary'
-                : 'text-dark-text/60 hover:text-dark-text'
-            }`}
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="px-4 py-2 rounded-wellness text-sm font-medium transition-colors border border-neutral-base/60 bg-white hover:bg-neutral-base disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2"
+            title="Refresh member data"
           >
-            All Members
-            <span className="ml-2 text-xs text-dark-text/50">
-              ({users.length})
-            </span>
+            {refreshing ? (
+              <>
+                <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-dark-text/20 border-t-dark-text/60" />
+                Refreshing…
+              </>
+            ) : (
+              <>
+                <span aria-hidden="true">↻</span>
+                Refresh
+              </>
+            )}
           </button>
         </div>
       </div>
