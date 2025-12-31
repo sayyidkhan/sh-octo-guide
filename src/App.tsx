@@ -5,6 +5,7 @@ import { Layout } from '@/components/Layout';
 import { Landing } from '@/pages/Landing';
 import { Login } from '@/pages/Login';
 import { Blocked } from '@/pages/Blocked';
+import { PendingApproval } from '@/pages/PendingApproval';
 import { Home } from '@/pages/Home';
 import { SocialChannels } from '@/pages/SocialChannels';
 import { Products } from '@/pages/Products';
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/blocked" element={<Blocked />} />
+          <Route path="/pending-approval" element={<PendingApproval />} />
 
           {/* Protected Routes - Member Dashboard */}
           <Route

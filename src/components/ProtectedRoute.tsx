@@ -24,6 +24,11 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/blocked" replace />;
   }
 
+  // Check if user is approved (super admins are always approved)
+  if (!user.approved && !user.isSuperAdmin) {
+    return <Navigate to="/pending-approval" replace />;
+  }
+
   return <>{children}</>;
 }
 

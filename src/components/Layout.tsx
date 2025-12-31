@@ -6,6 +6,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const currentYear = new Date().getFullYear();
 
   const handleSignOut = async () => {
     await signOut();
@@ -18,14 +19,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
     { to: '/products', label: 'Products' },
     { to: '/testimonials', label: 'Testimonials' },
     // Only show Admin link if user is admin OR if their email is in the admin whitelist
-    ...(user?.role === 'admin' || (user?.email && ['admin@example.com', 'your-email@gmail.com'].includes(user.email)) 
+    ...(user?.role === 'admin' || (user?.email && import.meta.env.VITE_ADMIN_EMAILS?.split(',').includes(user.email))
       ? [{ to: '/admin', label: 'Admin' }] 
       : []
     ),
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-base">
+    <div className="min-h-screen bg-neutral-base flex flex-col">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -130,7 +131,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {children}
       </main>
 
@@ -138,7 +139,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <footer className="bg-white border-t border-neutral-base/50 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <p className="text-center text-sm text-dark-text/70">
-            © 2025 13 Gold Diamonds. All rights reserved.
+            © {currentYear} 13 Gold Diamonds. All rights reserved.
           </p>
         </div>
       </footer>

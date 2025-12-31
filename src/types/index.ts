@@ -5,6 +5,8 @@ export interface User {
   photoURL: string | null;
   role?: 'member' | 'admin';
   blocked?: boolean;
+  approved?: boolean;
+  isSuperAdmin?: boolean;
 }
 
 export interface AuthContextType {

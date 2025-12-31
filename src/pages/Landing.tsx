@@ -6,6 +6,7 @@ import { StrongMenLogo } from '@/components/StrongMenLogo';
 export function Landing() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const currentYear = new Date().getFullYear();
 
   // Redirect to dashboard if already signed in
   useEffect(() => {
@@ -176,7 +177,7 @@ export function Landing() {
       <footer className="bg-dark-text text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-white/60">
-            © 2025 13 Gold Diamonds. All rights reserved.
+            © {currentYear} 13 Gold Diamonds. All rights reserved.
           </p>
         </div>
       </footer>

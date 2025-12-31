@@ -51,7 +51,7 @@ Copy the contents below to create your `.env.local` file.
 
 # Optional: bootstrap admin emails (comma-separated)
 # Used to grant initial admin access before admin roles/blacklists are fully set up.
-ADMIN_EMAILS=admin@example.com
+VITE_ADMIN_EMAILS=admin@example.com
 
 # CDN Cache TTL (seconds) - how long to cache Google Sheets data
 # Default: 604800 (7 days)
@@ -131,5 +131,8 @@ GOOGLE_SHEETS_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_KEY_HERE\n-----END 
 GOOGLE_SHEETS_RANGE_TESTIMONIALS=Testimonials!A:Z
 GOOGLE_SHEETS_RANGE_CONTENT_LIBRARY=ContentLibrary!A:Z
 GOOGLE_SHEETS_RANGE_ACCESS=Access!A:Z
+
+# Created by Vercel CLI
+VERCEL_OIDC_TOKEN=your_vercel_oidc_token
 ```
 
