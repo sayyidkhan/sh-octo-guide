@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { auth } from '@/lib/firebase';
-import { useNavigate } from 'react-router-dom';
 
 interface UserData {
   uid: string;
@@ -17,7 +16,6 @@ interface UserData {
 
 export function AdminDashboard() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [users, setUsers] = useState<UserData[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -118,6 +116,7 @@ export function AdminDashboard() {
 
   const fetchUsers = async (nextPageToken?: string) => {
     try {
+      setError(null);
       const firebaseUser = auth.currentUser;
       if (!firebaseUser) throw new Error('Not authenticated');
 
@@ -137,9 +136,18 @@ export function AdminDashboard() {
       const data = await response.json();
       setUsers(data.users);
       setPageToken(data.pageToken);
+      setIsMockData(false);
     } catch (err: any) {
-      console.warn("Falling back to mock data:", err);
-      setIsMockData(true);
+      const message = err?.message || 'Failed to load users';
+
+      if (message === 'Backend not available locally') {
+        console.warn("Falling back to mock data:", err);
+        setIsMockData(true);
+      } else {
+        setError(message);
+        setIsMockData(false);
+      }
+
       setUsers([
         {
           uid: '1',
